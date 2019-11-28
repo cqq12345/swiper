@@ -20,8 +20,8 @@ def submit_vcode(request):
     # 通过验证码登录,注册
     phonenum = request.POST.get('phonenum')
     vcode = request.POST.get('vcode')
-    cache_Vcode=cache.get('Vcode_%s' % phonenum)#取出缓存的验证码
-    if vcode and vcode == cache_Vcode:
+    cache_vcode=cache.get('Vcode_%s' % phonenum)#取出缓存的验证码
+    if vcode and vcode == cache_vcode:
         try:
             user=User.objects.get(phonenum=phonenum)
         except User.DoesNotExist:

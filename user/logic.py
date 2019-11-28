@@ -19,6 +19,6 @@ def send_vcode(mobile):
     if response.status_code == 200:
         result=response.json()
         if result['msg']=='OK':
-            cache.set('Vcode_%s' % mobile, vcode, 180) #将验证码写入缓存，保存三分钟
+            cache.set('Vcode_%s' % mobile, vcode, 60000) #将验证码写入缓存，保存三分钟
             return True
         return False
