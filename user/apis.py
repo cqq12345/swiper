@@ -1,5 +1,7 @@
+
+from django.core.cache import cache
 from django.http import JsonResponse
-from django.shortcuts import render
+from user.models import User
 
 # Create your views here.
 from user import logic
@@ -12,12 +14,25 @@ def get_vcode(request):
     if status:
         return JsonResponse({'code':stat.OK,'data':None})
     else:
-        return JsonResponse({'code':stat.VCODE_ERROR,'data':None})
+        return JsonResponse({'code':stat.SEND_SMS_ERROR,'data':None})
 
 def submit_vcode(request):
     # 通过验证码登录,注册
+    phonenum = request.POST.get('phonenum')
+    vcode = request.POST.get('vcode')
+    cache_Vcode=cache.get('Vcode_%s' % phonenum)#取出缓存的验证码
+    if vcode and vcode == cache_Vcode:
+        try:
+            user=User.objects.get(phonenum=phonenum)
+        except User.DoesNotExist:
+            user=User.objects.create(phonenum=phonenum)#创建用户
+            #进行登录
+        request.session['uid']=user.id
+        return JsonResponse({'code':stat.OK,'data':user.to_dict()})
+    else:
+        return JsonResponse({'code':stat.VCODE_ERROR,'data':None})
 
-    return
+
 
 def get_profile(request):
     # 获取个人资料
