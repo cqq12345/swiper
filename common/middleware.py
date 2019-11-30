@@ -1,9 +1,9 @@
-from django.http import JsonResponse
+
 from django.utils.deprecation import MiddlewareMixin
 
 from common import stat
 
-
+from libs.http import render_json
 
 class AuthMiddleware(MiddlewareMixin):
     '''用户登录中间件，白名单
@@ -19,6 +19,6 @@ class AuthMiddleware(MiddlewareMixin):
         if request.path not in self.path_white_list:
             uid=request.session.get('uid')
             if not uid:
-                return JsonResponse({'code':stat.LOGIN_REQURED,'data':None})
+                return render_json(code=stat.LOGIN_REQURED)
             else:
                 request.uid=uid
