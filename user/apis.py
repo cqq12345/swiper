@@ -7,6 +7,10 @@ from user.models import User
 from user import logic
 
 from common import stat
+
+from user.models import Profile
+
+
 def get_vcode(request):
     # 获取短信验证
     phonenum = request.GET.get('phonenum')
@@ -36,13 +40,15 @@ def submit_vcode(request):
 
 def get_profile(request):
     # 获取个人资料
-    return
+    profile,_=Profile.objects.get_or_create(id=request.uid)
+    return JsonResponse({'code':stat.OK,'data':profile.to_dict()})
 
 
 
 def set_profile(request):
 # 修改个人资料
-    return
+    user=User.objects.get(id=request.uid)
+    return JsonResponse(user.to_dict())
 
 def upload_avatar(request):
     # 头像上传
