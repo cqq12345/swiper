@@ -12,6 +12,12 @@ from user.models import Profile
 
 from libs.http import render_json
 
+from user.Form import UserForm
+from user.Form import ProfileForm
+
+
+
+
 def get_vcode(request):
     # 获取短信验证
     phonenum = request.GET.get('phonenum')
@@ -47,9 +53,20 @@ def get_profile(request):
 
 
 def set_profile(request):
-# 修改个人资料
-    user=User.objects.get(id=request.uid)
-    return render_json(user.to_dict())
+    '''修改个人资料'''
+    user_form=UserForm(request.POST)
+    profile_form = ProfileForm(request.POST)
+
+    # 检查数据有效性
+    if not user_form.is_valid():
+        return render_json(user_form.errors, stat.USER_FORM_ERROR)
+    if not profile_form.is_valid():
+        return render_json(profile_form.errors, stat.USER_FORM_ERROR)
+
+    # 保存数据
+    User.objects.filter(id=request.uid).update(**user_form.cleaned_data)
+    Profile.objects.filter(id=request.uid).update(**profile_form.cleaned_data)
+    return render_json()
 
 def upload_avatar(request):
     # 头像上传
@@ -57,6 +74,8 @@ def upload_avatar(request):
         2.上传到七牛云
          3.保存url
          4.删除本地'''
+    avatar_file = request.FILES.get('avatars')
+    logic.upload_avatar.delay(request.uid, avatar_file)
+    return render_json()
 
 
-    return

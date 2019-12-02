@@ -16,3 +16,7 @@ YZX_SMS_ARGS = {
 YZX_SMS_API = 'https://open.ucpaas.com/ol/sms/sendsms'
 
 
+QN_AK='_IysQihDz6bs92QPLYXyFJBDyp9AdvcGs4LKochA'
+QN_SK='4JQLytXc-_X_58fPDEVT6SUcS1d9w0ed1sTGc9-_'
+QN_BUCKET_NAME='cqq'
+QN_BASE_URL='http://q1vwqcfvw.bkt.clouddn.com'
